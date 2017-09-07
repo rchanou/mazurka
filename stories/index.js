@@ -6,6 +6,10 @@ import { linkTo } from "@storybook/addon-links";
 
 import { Button, Welcome } from "@storybook/react/demo";
 
+import Biome, { hypotenuse } from "../src/biome";
+
+storiesOf("Biome", module).add("default", () => <Biome program={hypotenuse} />);
+
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
 ));
