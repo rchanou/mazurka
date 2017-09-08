@@ -20,8 +20,8 @@
   - null
   - Others...
   - Static Reference
-    - These and sub-properties are unchangeable
-    - Used for standard libs, most npm packages
+    - Object reference that can't be mutated
+    - Use for standard lib methods and most npm packages
   - Mutable Reference
     - Reference inside object that’s “intended” to be mutated
     - Could potentially also be standalone mutable reference (already exists for “free” in a sense by defining on global object, so...never mind?)
