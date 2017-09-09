@@ -58,8 +58,11 @@
     - Unknown
 - Edit and Commit Types
   - Create
-    - Creates a new "flow"
+    - Creates a new "flow" (initial node)
+  - Link
+    - links node to another
   - Add
+    - Sugar for Create + Link
     - For existing flow, creates copy with node appended
   - Remove
     - For existing flow, creates copy with node removed
@@ -78,6 +81,10 @@
     - Creates copy of flow
     - Changes to original flow DO NOT change fork
 - View Types
+  - Select Node
+  - Select Flow
+    - select multiple nodes to define a "flow" section that the user wishes to operate on
+    - require labeling first?
   - Collapse
   - Show Versions
 - Test Types
