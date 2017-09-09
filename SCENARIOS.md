@@ -25,14 +25,15 @@
 Anything not persistent can be called "safe".
 Anything not idempotent can be called "unbounded".
 
-- console.log - effect
+- console.log - effect 
 - Math.random - effect, event-source
 - localStorage.set - effect, persistent, idempotent
 - localStorage.get - effect, event-source
 - ReactDOM.render - effect, idempotent
 - Date.now - effect, event-source
 - Math.PI - value, number
-- 
+- Math.floor - fun
+- React.createElement - fun
 
 #
 

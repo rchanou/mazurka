@@ -6,6 +6,7 @@
 - Easy Test Creation
 - “Practical” Types For Side Effects
 - “Community” and "Official" Types
+- Whitelist of Known/"Accepted" methods for references
 
 ## Details
 
@@ -31,13 +32,16 @@
     - New Op: Module
       - For including modules, by specific version
     - Can we derive what's considered a Function solely by analyzing Ops and other Nodes?
-  - Events
-    - Stream of events for a system. Defines a “program”, not a “function”.
+  - Input
+    - What "drives" the system. Callbacks/listeners push events to these inputs.
+  - Generator
+    - Returns a non-deterministic value; essentially a "non-idempotent" function
+    - Examples: Math.random, Date.now, shortid
   - Effect
     - Can these all be combined into one property to cover safety, idempotence, and ephemerality?
     - Publish
-      - Puts value on Input with ID
-      - Examples: Math.random, Date.now
+      - Puts value on certain input
+      - Pass to event handlers
     - Safe (Level 0)
       - Safe to re-run after a relevant code change, for example
       - Examples: log, render
