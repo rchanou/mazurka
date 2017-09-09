@@ -57,16 +57,34 @@
       - Counterexamples: write to disk, launch missile
     - Unknown
 - Edit and Commit Types
-  - Function
-  - Mark
-  - Copy
-  - Instance
+  - Create
+    - Creates a new "flow"
   - Add
-  - Delete
-  - Swap (Sugar for Delete and Add)
+    - For existing flow, creates copy with node appended
+  - Remove
+    - For existing flow, creates copy with node removed
+  - Change
+    - Sugar for Add an Remove
+  - Instance
+    - Creates copy of flow (to include in another flow)
+    - JS analogy: function call
+    - Change to original flow changes this flow
+  - Variant
+    - Creates copy of flow
+    - Flow copy behavior can be modified
+    - Change to original flow can propagate to branch flow
+      - Proposed behavior: branch flows can show diffs and user can selectively patch them in.
+  - Fork
+    - Creates copy of flow
+    - Changes to original flow DO NOT change fork
+- View Types
+  - Collapse
+  - Show Versions
 - Test Types
   - Mark as Invariant
+    - must hold true
   - Mark as Invalid
+    - necessary? basically sugar for "must NOT hold true"
 
 ## V2
 - Networked/Distributed
