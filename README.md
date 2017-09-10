@@ -67,7 +67,7 @@
   - Remove
     - For existing flow, creates copy with node removed
   - Change
-    - Sugar for Add an Remove
+    - Sugar for **Add** and **Remove**
   - Instance
     - Creates copy of flow (to include in another flow)
     - JS analogy: function call
@@ -76,7 +76,7 @@
     - Creates copy of flow
     - Flow copy behavior can be modified
     - Change to original flow can propagate to branch flow
-      - Proposed behavior: branch flows can show diffs and user can selectively patch them in.
+      - Proposed behavior: branch flows show diffs and user can selectively patch them in.
   - Fork
     - Creates copy of flow
     - Changes to original flow DO NOT change fork
@@ -85,17 +85,26 @@
   - Select Flow
     - select multiple nodes to define a "flow" section that the user wishes to operate on
     - require labeling first?
+  - Node/Flow metadata operations
+    - Add Name
+    - Add Description
+    - Add Comment
+    - Add Type
   - Collapse
+  - Expand
   - Show Versions
-- Test Types
+- Saved Values
   - Mark as Invariant
     - must hold true
   - Mark as Invalid
     - necessary? basically sugar for "must NOT hold true"
+  - Clear
+  - Set Max
 
 ## V2
 - Networked/Distributed
-- Static Types
+- Strong Types
+- Test Generation (From Types)
 - Include Other Assets
 - Custom Edit Operations
 
