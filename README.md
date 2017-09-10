@@ -113,6 +113,7 @@
 - Secure Private Modules
 - Other Targets! (C, Jai, OCaml, Assembly, etc.)
 - Optimized Compilation
+- First Class Dependency Injection?
 
 #
 

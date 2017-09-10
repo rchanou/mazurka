@@ -112,8 +112,9 @@ do-it-all #document
 ```
 
 #### Interesting insights from this:
-- Initialization could happen by passing in the globaj object of the current runtime.
+- Initialization could happen by passing in the global object of the current runtime.
   - What if no global exists?
+  - Perhaps a nice story for dependency injection would be useful here, among other places.
 - Currying is automatic; passing a bound function without executing it is a matter of sending in an unused "hole" which could be anything.
   - Should this be given a special type, a la the **unit** type in ReasonML?
 - Speaking of types...they really would come in handy here, especially with the inversion of methods into independent functions that act on objects.
