@@ -111,10 +111,17 @@ do-it-all #document
   run-render-and-subscribe render-app counter-store
 ```
 
-#### Questions this brings up:
-- Should initialization happen by passing in a global object? My intuition says to try it.
-- Should fulfilling all "holes" not automatically run it, to allow passing the bound function itself? My intuition says to try this first.
-- As a corollary of the above, what exactly could/should that "run" parameter be? Could it be the global? An overridable context? Nothing?
+#### Interesting insights from this:
+- Initialization could happen by passing in the globaj object of the current runtime.
+  - What if no global exists?
+- Currying is automatic; passing a bound function without executing it is a matter of sending in an unused "hole" which could be anything.
+  - Should this be given a special type, a la the **unit** type in ReasonML?
+- Speaking of types...they really would come in handy here, especially with the inversion of methods into independent functions that act on objects.
+  - Those functions are still tightly coupled to the data structures that they were pulled out from.
+  - This would help with "autocomplete".
+  - Could have abstract types a la ReasonML.
+- How should "standalone" mutable refs, e.g. **innerHTML**, be implemented via code?
+- **innerHTML** is also a potential example of a "multi-dimensional" type, as it's both mutable and effectful (changes UI).
 
 ### Same as above, but in vanilla JS.
 

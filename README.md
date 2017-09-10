@@ -102,11 +102,17 @@
   - Set Max
 
 ## V2
-- Networked/Distributed
+- Networked/Distributed Syncing
+  - Both Decentralized and Centralized Options
 - Strong Types
-- Test Generation (From Types)
-- Include Other Assets
+  - Test Generation From Types
+  - Nodes can have multiple types?
+- Include Other Assets Besides NPM Modules (CSS, images, etc.)
+  - Escape hatch for arbitrary command line operations?
 - Custom Edit Operations
+- Secure Private Modules
+- Other Targets! (C, Jai, OCaml, Assembly, etc.)
+- Optimized Compilation
 
 #
 
