@@ -34,4 +34,4 @@ const Test = types.model("Test", { name: types.string });
 
 export const test = Test.create({ name: "abc" });
 
-console.log(Label, Commit);
+// console.log(Label, Commit, test);
