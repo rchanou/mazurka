@@ -32,8 +32,13 @@
     - New Op: Module
       - For including modules, by specific version
     - Can we derive what's considered a Function solely by analyzing Ops and other Nodes?
+    - Call
+      - **NOTE:** probably not necessary with **Event** type input described in **Input** section
+      - Special Op that works with special **Unit** type (a la Reason)
+      - When all other Inputs fulfilled, must still be passed **Unit** to execute?
   - Input
     - What "drives" the system. Callbacks/listeners push events to these inputs.
+    - **Event** type used to "bind" functions to defer calling and pass around function itself, not invocation result 
   - Generator
     - Returns a non-deterministic value; essentially a "non-idempotent" function
     - Examples: Math.random, Date.now, shortid
@@ -107,13 +112,14 @@
 - Strong Types
   - Test Generation From Types
   - Nodes can have multiple types?
+- Release Tagging
 - Include Other Assets Besides NPM Modules (CSS, images, etc.)
   - Escape hatch for arbitrary command line operations?
 - Custom Edit Operations
 - Secure Private Modules
 - Other Targets! (C, Jai, OCaml, Assembly, etc.)
 - Optimized Compilation
-- First Class Dependency Injection?
+- First Class Dependency Injection/Context?
 
 #
 
