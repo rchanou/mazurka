@@ -76,13 +76,13 @@ get-dispatch-dec #store #
   dispatch get-dispatch #store
   dispatcher create-dispatcher DEC_TYPE
 
-add-listeners #document #store
-  inc-button get-el-by-id #document 'increment'
+add-listeners document #store
+  inc-button get-el-by-id document 'increment'
   dispatch-inc get-dispatch-inc #store
-  add-event-listener #document dispatch-inc
-  dec-button get-el-by-id #document 'decrement'
+  add-event-listener document dispatch-inc
+  dec-button get-el-by-id document 'decrement'
   dispatch-dec get-dispatch-dec #store
-  add-event-listener #document dispatch-dec
+  add-event-listener document dispatch-dec
 
 counter-store create-store counter
 
@@ -104,16 +104,6 @@ init-app INIT
   - Could have abstract types a la ReasonML.
 - How should "standalone" mutable refs, e.g. **innerHTML**, be implemented via code?
 - **innerHTML** is also a potential example of a "multi-dimensional" type, as it's both mutable and effectful (changes UI).
-
-### Commit Stream
-
-```
-<!-- open input 1 -->
-link 7 input 1
-  title 'days in week'
-  body 'returns the number of days in a week'
-  
-```
 
 ### Deferred Calling (Both with First-Class Support and without)
 
@@ -162,3 +152,25 @@ fulfilled-sum deferred-sum ()
 - Looks like this could work without first-class support.
 - The **First-Class Op** maps pretty closely to `bind` in JS.
 - The **First-Class Input** seems cool but may not actually map properly to a dependency graph, and thus may not hold water.
+
+### Commit Stream
+
+```
+0 /. /global Math
+1 /. /0 pow
+2 /. /1 sqrt
+4 /. /global console
+5 /. /4 log
+6 /1 /i 2
+7 /6 3
+8 /6 4
+9 /+ /7 /8
+10 /2 /9
+
+```
+
+#### Insights...
+- How should the ID of a given node be determined?
+  - Assigning a numeric ID is essentially a "memoization", which I think is fine.
+  - Do the inputs have IDs themselves?
+    - Facilitates attaching comments, etc.?
