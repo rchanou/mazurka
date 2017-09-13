@@ -96,7 +96,7 @@ init-app INIT
   - Same for `store.subscribe`: it has an "effect" (can even be considered "mutable") but is only called once at setup.
 - Related: Encapsulate HTML page?
   - Relates to concept of multiple possible JS "runtimes" to choose from, each with different guarantees.
-  - One runtime can prohibit any direct modifications to HTML with the exception of an initialization config?≠
+  - One runtime can prohibit any direct modifications to HTML with the exception of an initialization config?
 - Passing a bound function itself, rather than executing it, is a matter of calling it as a parameter of "bind"
 - Speaking of types...they really would come in handy here, especially with the inversion of methods into independent functions that act on objects.
   - Those functions are still tightly coupled to the data structures that they were pulled out from.
@@ -114,3 +114,51 @@ link 7 input 1
   body 'returns the number of days in a week'
   
 ```
+
+### Deferred Calling (Both with First-Class Support and without)
+
+#### No First-Class Support
+```
+get-binder #fun
+  . #fun 'bind'
+
+bind #fun #args
+  binder get-binder #fun
+  bound binder #args
+
+deferred-sum #a #b #c
+  list = [] null #a #b #c
+  bind $sum list
+```
+
+#### First-Class Op
+```
+sum #a #b #c
+  deferred-sum $collect #a #b #c
+
+deferred-sum-example 1 3 5
+
+fulfilled-sum deferred-sum-example
+```
+
+#### First-Class Unit Input
+```
+get-days-in-week #
+  dw 7
+
+days-in-week get-days-in-week ()
+
+sum #a #b #c #
+  sum $sum #a #b #c
+
+sum-test sum 1 3 4 ()
+
+deferred-sum sum 3 4 5
+
+fulfilled-sum deferred-sum ()
+```
+
+#### Insights Thus Far...
+- Looks like this could work without first-class support.
+- The **First-Class Op** maps pretty closely to `bind` in JS.
+- The **First-Class Input** seems cool but may not actually map properly to a dependency graph, and thus may not hold water.
