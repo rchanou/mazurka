@@ -22,6 +22,7 @@ const BRANCH = "BRANCH";
 const FORK = "FORK";
 
 const Input = types.model(types.identifier(types.number));
+
 const Node = types.union(Input);
 
 const Label = types.reference(Node);
@@ -30,8 +31,13 @@ const Action = types.enumeration([ADD, REMOVE, MARK, INSTANCE, BRANCH, FORK]);
 
 const Commit = types.array(Action);
 
-const Test = types.model("Test", { name: types.string });
+const commitSchema = {
+  id: types.identifier(types.number),
+  title: types.string,
+  description: types.string
+};
 
-export const test = Test.create({ name: "abc" });
+export const Add = types.model("Add", commitSchema);
+export const Copy = types.model("Copy", commitSchema);
 
 // console.log(Label, Commit, test);

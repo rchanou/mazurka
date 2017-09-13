@@ -1,4 +1,3 @@
-
 ### Vanilla Redux
 
 ```
@@ -92,7 +91,7 @@ init-app INIT
 #### Interesting insights from this:
 - What, if anything, could be contained in the INIT event object?
 - Separate concept of **"setup phase"** to make it easier to bring methods into the world of "purity"?
-  - For example, `document.getElementById('value')` not guaranteed to be pure/idempotent in normal app, but this is just called once for setup.
+  - For example, `document.getElementById('value')` not guaranteed to be pure/idempotent in normal app, but this is just called on ce for setup.
   - Same for `store.subscribe`: it has an "effect" (can even be considered "mutable") but is only called once at setup.
 - Related: Encapsulate HTML page?
   - Relates to concept of multiple possible JS "runtimes" to choose from, each with different guarantees.
@@ -154,23 +153,33 @@ fulfilled-sum deferred-sum ()
 - The **First-Class Input** seems cool but may not actually map properly to a dependency graph, and thus may not hold water.
 
 ### Commit Stream
+```
 
 ```
-0 /. /global Math
-1 /. /0 pow
-2 /. /1 sqrt
-4 /. /global console
-5 /. /4 log
-6 /1 /i 2
-7 /6 3
-8 /6 4
-9 /+ /7 /8
-10 /2 /9
 
+### Node Map and/or Commit Stream
+```
+0 /. /global Math 
+1 /. /0 pow
+2 /. /0 sqrt
+3 /. /global console
+4 /. /3 log
+5 /1 /i1(number) 2
+6 /5 3
+7 /5 4
+8 /+ /6 /7
+9 /2 /8
+10 /mark /i1 /5
+11 /copy /10
+12 /1 /i3 2
+13 /2 /11 /12
 ```
 
 #### Insights...
 - How should the ID of a given node be determined?
   - Assigning a numeric ID is essentially a "memoization", which I think is fine.
   - Do the inputs have IDs themselves?
-    - Facilitates attaching comments, etc.?
+    - Facilitates attaching comments, etc.
+    - Final Conclusion: **Yes**
+
+  
