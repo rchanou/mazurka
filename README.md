@@ -8,6 +8,12 @@
 - “Community” and "Official" Types
 - Whitelist of Known/"Accepted" methods for references
 
+### Philosophies
+- Programming as Process of **Discovery**, not Creation
+- Most Everything in Code is Really Metadata (Variable Names, Types, etc.)
+- Pit of Success: Make Most Important and Common Techniques Easy, Exceptions Hard, but...
+- Powerful Escape Hatches: Warn, Don't Prevent
+
 ## Details
 
 - Node Types

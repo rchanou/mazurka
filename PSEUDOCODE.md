@@ -169,10 +169,15 @@ fulfilled-sum deferred-sum ()
 7 /5 4
 8 /+ /6 /7
 9 /2 /8
-10 /mark /i1 /5
-11 /copy /10
+10 /mark /i1 /5 
+  // does this make sense at all?
+  // Possible IDs of these generated nodes:
+  // /10.i1, /10.5
+  // /0.i1, /0.5   // first marked flow
+11 /copy /10       // or /copy /i1 /5 ? Would this really work programmatically?
 12 /1 /i3 2
 13 /2 /11 /12
+14 
 ```
 
 #### Insights...
@@ -181,5 +186,37 @@ fulfilled-sum deferred-sum ()
   - Do the inputs have IDs themselves?
     - Facilitates attaching comments, etc.
     - Final Conclusion: **Yes**
+- What's the best way to represent IDs of "second-order" nodes: nodes not directly created by the user, but as a result of the various copy operations such as **Branch** and **Fork**?
+  - Operation themselves become ID paths.
+  - Any way to efficiently represent **Instance**? This is just like a function call, but the naive approach would be to copy a flow and swap out the **Inputs** ("parameters"). I think this is an optimization and we can cross that bridge when we get to it.
+  - Any other way possible?
+- Keep Group Operations in a Separate Stream? 
+- How 'Bout Dis: Create Regular Nodes But Keep Track Of Their "Origin Story" as Metadata
+  - Brilliant, no? In line with programming as "discovery"
+  - Makes sense logically and is optimized
+  - Consistent with "most of this is just metadata" philosophy (e.g. names, types)
+  - 
 
-  
+### Group Ops in Separate Stream
+```
+0 /. /global Math 
+1 /. /0 pow
+2 /. /0 sqrt
+3 /. /global console
+4 /. /3 log
+5 /1 /i1(number) 2
+6 /5 3
+7 /5 4
+8 /+ /6 /7
+9 /2 /8
+10 /mark /i1 /5 
+  // does this make sense at all?
+  // Possible IDs of these generated nodes:
+  // /10.i1, /10.5
+  // /2.i1, /2.5
+11 /copy /10
+12 /1 /i3 2
+13 /2 /11 /12
+14 
+```
+
