@@ -196,31 +196,36 @@ fulfilled-sum deferred-sum ()
   - Makes sense logically and is optimized
   - Consistent with "most of this is just metadata" philosophy (e.g. names, types)
   - Does it Really Make Sense Doe?
+- Breakthrough: Most Inputs should actually be conceptualized as copy operations?
   - Copying one Input creates copies of all dependent values
-  - Breakthrough: Most Inputs should actually be conceptualized as copy operations?
   - Inputs are a form of Typing if you think about it
   - Defines a space of possible values rather than a single one
 
-### Group Ops in Separate Stream
+### Flow Groups as Metadata
+
+#### Nodes
 ```
 0 /. /global Math 
 1 /. /0 pow
 2 /. /0 sqrt
 3 /. /global console
 4 /. /3 log
-5 /1 /i1(number) 2
-6 /5 3
-7 /5 4
-8 /+ /6 /7
-9 /2 /8
-10 /mark /i1 /5 
-  // does this make sense at all?
-  // Possible IDs of these generated nodes:
-  // /10.i1, /10.5
-  // /2.i1, /2.5
-11 /copy /10
-12 /1 /i3 2
-13 /2 /11 /12
-14 
+5 /1 3 2
+6 /1 4 2
+7 /+ /5 /6
+8 /2 /7
+9 /1 /i1(number) 2
+10 /1 /i2(number) 2
+11 /+ /9 /10
+12 /2 /11
 ```
 
+#### Marks
+```
+0 /9 /10 /12
+```
+
+#### Insights
+- These programs can never actually all functions generated from **Inputs** at static compile time. **Inputs** are strictly reserved for runtime.
+- Rather, to generate desired values at compile time, you just apply commits.
+- Ultimately, environment initialization and event handlers are what used the functions generated from Input connections.
