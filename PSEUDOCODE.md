@@ -195,7 +195,11 @@ fulfilled-sum deferred-sum ()
   - Brilliant, no? In line with programming as "discovery"
   - Makes sense logically and is optimized
   - Consistent with "most of this is just metadata" philosophy (e.g. names, types)
-  - 
+  - Does it Really Make Sense Doe?
+  - Copying one Input creates copies of all dependent values
+  - Breakthrough: Most Inputs should actually be conceptualized as copy operations?
+  - Inputs are a form of Typing if you think about it
+  - Defines a space of possible values rather than a single one
 
 ### Group Ops in Separate Stream
 ```
