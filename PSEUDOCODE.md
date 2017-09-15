@@ -218,6 +218,9 @@ fulfilled-sum deferred-sum ()
 10 /1 /i2(number) 2
 11 /+ /9 /10
 12 /2 /11
+13 /m0 /i3 /i4 - Pythagorean Call
+14 /m2 4
+
 ```
 
 #### Marks
@@ -225,13 +228,36 @@ fulfilled-sum deferred-sum ()
 0 /9 /10 /12
 ```
 
-#### Copy Operation ("Function")
+#### Copy Operation ("Function" or "Macro")
 ```
-0. Pythagorean /a /b
+m0 /a /b - Pythagorean
 0 /1 /a 2
 1 /1 /b 2
-2 /+ /0.0 /1.1
-3 /2 /0.2
+2 /+ /.0 /.1
+3 /2 /.2
+
+m1 /a /b /c - Any N Pythagorean
+0 /1 /a /c
+1 /1 /b /c
+2 /+ /.0 /.1
+3 /2 /.2
+
+m2 /n - 3D+ Pythagorean (Higher-Order Macro?)
+0 for x=0..n
+  .x /1 /i.0.x 2
+1 /+ ... /.0
+2 /2 /.2
+```
+
+```
+m2 expanded
+0 /m2 4
+0.0.0 /1 /i.0.0 2
+0.0.1 /1 /i.0.1 2
+0.0.2 /1 /i.0.2 2
+0.0.3 /1 /i.0.3 2
+0.1 /+ /0.0.0 /0.0.1 /0.0.2 /0.0.3
+0.2 /2 /0.1
 ```
 
 #### Insights
