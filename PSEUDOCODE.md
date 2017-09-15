@@ -263,6 +263,6 @@ m2 expanded
 #### Insights
 - These programs can never actually call functions generated from **Inputs** at static compile time. **Inputs** are strictly reserved for runtime.
 - Rather, to generate desired values at compile time, you just apply commits.
-- Ultimately, environment initialization and event handlers are what used the functions generated from Input connections.
+- Ultimately, environment initialization and event handlers are what use the functions generated from Input connections.
 - Every commit explores/reveals/"uses" new nodes.
 - Creating a "function" is essentially an act of label creation?

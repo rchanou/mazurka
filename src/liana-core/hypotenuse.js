@@ -13,9 +13,20 @@ const macros = {
         0: ["/1", "/x", 2] // does this need to be assigned to an id? what about multi-step cases?
       }
     ],
-    1: ["/...", "/+", "/.0"], // is this right?
+    1: ["/...", "/+", "/.0"], // is this right? how about spread-by-default?
     2: ["/2", "/.1"]
-  }
+  },
+  2: {
+    // map
+    0: ["/.", "/i.0", "map"],
+    1: ["/.0", "/i.1", "/i.2"]
+  },
+  3: {
+    //apply
+    0: ["/.", "/i.0", "apply"],
+    1: ["/.0", "/i.1", "/i.2"]
+  },
+  4: {}
 };
 
 const graph = {
@@ -23,5 +34,11 @@ const graph = {
   0: ["/.", "/g", "Math"],
   1: ["/.", "/0", "pow"],
   2: ["/.", "/0", "sqrt"],
-  3: ["/.", "/g", "console"]
+  3: ["/.", "/g", "console"],
+  4: ["/m3", "/i1", "/null", "/i2"],
+  5: ["/4", "/+", [1, 2, 3]]
+
+  // 4: ["/.", "/i1", "map"], // get map
+  // 5: ["/4", "/i2", "/i3"],
+  // 6: ["/"]
 };
