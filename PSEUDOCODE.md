@@ -225,6 +225,15 @@ fulfilled-sum deferred-sum ()
 0 /9 /10 /12
 ```
 
+#### Copy Operation ("Function")
+```
+0. Pythagorean /a /b
+0 /1 /a 2
+1 /1 /b 2
+2 /+ /0.0 /1.1
+3 /2 /0.2
+```
+
 #### Insights
 - These programs can never actually call functions generated from **Inputs** at static compile time. **Inputs** are strictly reserved for runtime.
 - Rather, to generate desired values at compile time, you just apply commits.
