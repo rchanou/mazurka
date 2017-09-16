@@ -169,10 +169,15 @@ fulfilled-sum deferred-sum ()
 7 /5 4
 8 /+ /6 /7
 9 /2 /8
-10 /mark /i1 /5
-11 /copy /10
+10 /mark /i1 /5 
+  // does this make sense at all?
+  // Possible IDs of these generated nodes:
+  // /10.i1, /10.5
+  // /0.i1, /0.5   // first marked flow
+11 /copy /10       // or /copy /i1 /5 ? Would this really work programmatically?
 12 /1 /i3 2
 13 /2 /11 /12
+14 
 ```
 
 #### Insights...
@@ -182,4 +187,83 @@ fulfilled-sum deferred-sum ()
     - Facilitates attaching comments, etc.
     - Final Conclusion: **Yes**
 - It's not just groups that get marked. **Everything** is a mark. This form of coding is the process of **discovering** and **revealing** logic and functionality, rather than constructing it.
-  
+- What's the best way to represent IDs of "second-order" nodes: nodes not directly created by the user, but as a result of the various copy operations such as **Branch** and **Fork**?
+  - Operation themselves become ID paths.
+  - Any way to efficiently represent **Instance**? This is just like a function call, but the naive approach would be to copy a flow and swap out the **Inputs** ("parameters"). I think this is an optimization and we can cross that bridge when we get to it.
+  - Any other way possible?
+- Keep Group Operations in a Separate Stream? 
+- How 'Bout Dis: Create Regular Nodes But Keep Track Of Their "Origin Story" as Metadata
+  - Brilliant, no? In line with programming as "discovery"
+  - Makes sense logically and is optimized
+  - Consistent with "most of this is just metadata" philosophy (e.g. names, types)
+  - Does it Really Make Sense Doe?
+- Breakthrough: Most Inputs should actually be conceptualized as copy operations?
+  - Copying one Input creates copies of all dependent values
+  - Inputs are a form of Typing if you think about it
+  - Defines a space of possible values rather than a single one
+
+### Flow Groups as Metadata
+
+#### Nodes
+```
+0 /. /global Math 
+1 /. /0 pow
+2 /. /0 sqrt
+3 /. /global console
+4 /. /3 log
+5 /1 3 2
+6 /1 4 2
+7 /+ /5 /6
+8 /2 /7
+9 /1 /i1(number) 2
+10 /1 /i2(number) 2
+11 /+ /9 /10
+12 /2 /11
+13 /m0 /i3 /i4 - Pythagorean Call
+14 /m2 4
+
+```
+
+#### Marks
+```
+0 /9 /10 /12
+```
+
+#### Copy Operation ("Function" or "Macro")
+```
+m0 /a /b - Pythagorean
+0 /1 /a 2
+1 /1 /b 2
+2 /+ /.0 /.1
+3 /2 /.2
+
+m1 /a /b /c - Any N Pythagorean
+0 /1 /a /c
+1 /1 /b /c
+2 /+ /.0 /.1
+3 /2 /.2
+
+m2 /n - 3D+ Pythagorean (Higher-Order Macro?)
+0 for x=0..n
+  .x /1 /i.0.x 2
+1 /+ ... /.0
+2 /2 /.2
+```
+
+```
+m2 expanded
+0 /m2 4
+0.0.0 /1 /i.0.0 2
+0.0.1 /1 /i.0.1 2
+0.0.2 /1 /i.0.2 2
+0.0.3 /1 /i.0.3 2
+0.1 /+ /0.0.0 /0.0.1 /0.0.2 /0.0.3
+0.2 /2 /0.1
+```
+
+#### Insights
+- These programs can never actually call functions generated from **Inputs** at static compile time. **Inputs** are strictly reserved for runtime.
+- Rather, to generate desired values at compile time, you just apply commits.
+- Ultimately, environment initialization and event handlers are what use the functions generated from Input connections.
+- Every commit explores/reveals/"uses" new nodes.
+- Creating a "function" is essentially an act of label creation?
