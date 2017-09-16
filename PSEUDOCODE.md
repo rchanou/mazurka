@@ -181,5 +181,5 @@ fulfilled-sum deferred-sum ()
   - Do the inputs have IDs themselves?
     - Facilitates attaching comments, etc.
     - Final Conclusion: **Yes**
-
+- It's not just groups that get marked. **Everything** is a mark. This form of coding is the process of **discovering** and **revealing** logic and functionality, rather than constructing it.
   
