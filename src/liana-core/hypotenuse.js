@@ -13,7 +13,7 @@ const macros = {
         0: ["/1", "/x", 2] // does this need to be assigned to an id? what about multi-step cases?
       }
     ],
-    1: ["/...", "/+", "/.0"], // is this right? how about spread-by-default?
+    1: ["/4", "/+", "/.0"],
     2: ["/2", "/.1"]
   },
   2: {
@@ -35,10 +35,11 @@ const graph = {
   1: ["/.", "/0", "pow"],
   2: ["/.", "/0", "sqrt"],
   3: ["/.", "/g", "console"],
-  4: ["/m3", "/i1", "/null", "/i2"],
-  5: ["/4", "/+", [1, 2, 3]]
-
-  // 4: ["/.", "/i1", "map"], // get map
-  // 5: ["/4", "/i2", "/i3"],
-  // 6: ["/"]
+  4: ["/m3", "/i1", null, "/i2"],
+  5: ["/4", "/+", [1, 2, 3]],
+  6: ["/<", "/i2", 3],
+  7: ["+", "/i3", 1],
+  8: ["/for", 0, "/6", "/7"], // would this know that it's "fulfilled"? how? inherent to the primitive, probably
+  9: ["/for", 0, "/<", "/7"], // does this make sense, too? will this work?
+  10: ["/9", 5] // test of the above
 };

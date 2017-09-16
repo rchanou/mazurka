@@ -249,9 +249,14 @@ m2 /n - 3D+ Pythagorean (Higher-Order Macro?)
 2 /2 /.2
 ```
 
+```js
+N-dimensional Pythagorean
+const pyth = n => Math.sqrt()
+```
+
 ```
 m2 expanded
-0 /m2 4
+0 /m2 
 0.0.0 /1 /i.0.0 2
 0.0.1 /1 /i.0.1 2
 0.0.2 /1 /i.0.2 2
@@ -266,3 +271,38 @@ m2 expanded
 - Ultimately, environment initialization and event handlers are what use the functions generated from Input connections.
 - Every commit explores/reveals/"uses" new nodes.
 - Creating a "function" is essentially an act of label creation?
+
+### Imperative Control Flow as Functions
+
+#### For
+```
+// JS
+for (let i = 0; i < 3; i++){
+  console.log(i);
+}
+
+// Wrapped
+const forLoop = (start, comparator, iterator) => {
+  const list = [];
+  for (let i = start; comparator(i); i = iterator(i)){ 
+    list.push(i);
+  }
+  return list;
+}
+```
+
+#### While
+```
+// JS
+let a = 5;
+while (a > 3){
+  a--;
+}
+
+// Wrapped
+// Same as forLoop? Necessary? Typically mutates something in JS Land...
+```
+
+#### Insights
+- Caching to an ID is an effectful operation. How can cache ID assignment be contained in "higher-order" operations?
+- Can types be fully inferred for the "for" operation? Will it know how to handle if it's a sent a pure function as opposed to a "generator"?
