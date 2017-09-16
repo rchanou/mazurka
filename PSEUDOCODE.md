@@ -251,8 +251,20 @@ m2 /n - 3D+ Pythagorean (Higher-Order Macro?)
 ```
 
 ```js
-N-dimensional Pythagorean
-const pyth = n => Math.sqrt()
+// N-dimensional Pythagorean
+
+const forLoop = (start, comparator, iterator) => {
+  const list = [];
+  for (let i = start; comparator(i); i = iterator(i)){ 
+    list.push(i);
+  }
+  return list;
+};
+
+const pyth = sides => Math.sqrt(
+  sides.map(x => Math.pow(x, 2))
+  .reduce((sum, x) => sum + x, 0)
+);
 ```
 
 ```
