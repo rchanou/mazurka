@@ -186,6 +186,7 @@ fulfilled-sum deferred-sum ()
   - Do the inputs have IDs themselves?
     - Facilitates attaching comments, etc.
     - Final Conclusion: **Yes**
+- It's not just groups that get marked. **Everything** is a mark. This form of coding is the process of **discovering** and **revealing** logic and functionality, rather than constructing it.
 - What's the best way to represent IDs of "second-order" nodes: nodes not directly created by the user, but as a result of the various copy operations such as **Branch** and **Fork**?
   - Operation themselves become ID paths.
   - Any way to efficiently represent **Instance**? This is just like a function call, but the naive approach would be to copy a flow and swap out the **Inputs** ("parameters"). I think this is an optimization and we can cross that bridge when we get to it.
