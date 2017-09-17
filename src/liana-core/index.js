@@ -13,3 +13,8 @@ const Node = types.model("Node", {
   id: types.identifier,
   from: types.array(Primitive)
 });
+
+const Macro = types.model("Macro", {
+  id: types.identifier,
+  nodes: types.array(Node)
+});
