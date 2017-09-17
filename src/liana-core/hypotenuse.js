@@ -1,11 +1,11 @@
-const macros = {
-  0: {
+const graph = {
+  m0: {
     0: ["/1", "/i.0", "/i.2"],
     1: ["/1", "/i.1", "/i.2"],
     2: ["/+", "/.0", "/.1"],
     3: ["/2", "/.2"]
   },
-  1: {
+  m1: {
     0: [
       "/l",
       "/i.0",
@@ -16,26 +16,22 @@ const macros = {
     1: ["/4", "/+", "/.0"],
     2: ["/2", "/.1"]
   },
-  2: {
+  m2: {
     // map
     0: ["/.", "/i.0", "map"],
     1: ["/.0", "/i.1"]
   },
-  3: {
+  m3: {
     // apply
     0: ["/.", "/i.0", "apply"],
     1: ["/.0", "/i.1", "/i.2"]
   },
-  4: {
+  m4: {
     // nth-dimension pythagorean
     0: ["/m2", "/i.0", "/11"], // map list to squares
     1: ["/4", "/+", "/.1"], // sum squares
     2: ["/2", "/.2"] // root of sum of squares
-  }
-};
-
-const graph = {
-  macros,
+  },
   0: ["/.", "/g", "Math"],
   1: ["/.", "/0", "pow"],
   2: ["/.", "/0", "sqrt"],
@@ -50,3 +46,8 @@ const graph = {
   11: ["/1", "/i4", 2], // to power of 2
   12: ["/m4", [3, 4, 5]]
 };
+
+/*
+-- Insights --
+- Should inputs be explicitly required for functional "primitives"?
+*/

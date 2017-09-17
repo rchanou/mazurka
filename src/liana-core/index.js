@@ -1,6 +1,6 @@
 import { types } from "mobx-state-tree";
 
-const Keyword = types.model("Token", { name: types.string });
+const Keyword = types.model("Keyword", { name: types.string });
 
 const Primitive = types.union(
   Keyword,
