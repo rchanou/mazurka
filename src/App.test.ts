@@ -11,15 +11,18 @@ it("does stuff", () => {
           3: { id: "3", link: [{ op: "g" }, "console"] },
           4: {
             id: "4",
-            link: [{ macroRef: "0" }, { key: "0" }, null, { key: "1" }]
+            link: [{ subRef: "0" }, { id: 0 }, null, { id: 1 }]
           },
           5: { id: "5", link: [{ op: "[" }, 1, 2, 3] },
           6: { id: "6", link: [{ ref: "4" }, { op: "+" }] }
         },
-        macros: {
+        subs: {
           0: {
             id: "0",
-            macro: { 0: [{ op: "." }, { key: ".0" }, "apply"],1:[{}] }
+            sub: {
+              0: [{ op: "." }, { subInput: 0 }, "apply"],
+              1: [{ subLink: 0 }]
+            }
           }
         }
       }

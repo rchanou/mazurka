@@ -29,8 +29,8 @@ const graph = {
   m4: {
     // nth-dimension pythagorean
     0: ["/m2", "/i.0", "/11"], // map list to squares
-    1: ["/4", "/+", "/.1"], // sum squares
-    2: ["/2", "/.2"] // root of sum of squares
+    1: ["/4", "/+", "/.0"], // sum squares
+    2: ["/2", "/.1"] // root of sum of squares
   },
   0: ["/.", "/g", "Math"],
   1: ["/.", "/0", "pow"],

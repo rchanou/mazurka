@@ -75,7 +75,7 @@ export const Op = types.model("Op", {
 });
 
 export const Input = types.model("Input", {
-  key: types.number
+  id: types.identifier(types.number)
 });
 
 export const Node = types.union(
@@ -83,7 +83,7 @@ export const Node = types.union(
   Op,
   Input,
   types.late(() => LinkRef),
-  types.late(() => MacroRef)
+  types.late(() => SubRef)
 );
 
 export const Link = types
@@ -103,18 +103,28 @@ export const Link = types
 
 export const LinkRef = types.model("LinkRef", { ref: types.reference(Link) });
 
-export const MacroNode = types.union(
+export const SubInput = types.model("SubInput", {
+  subInput: types.number
+});
+
+export const SubLink = types.model("SubLink", {
+  subLink: types.number
+});
+
+export const SubNode = types.union(
   Primitive,
   Op,
   Input,
   LinkRef,
-  types.late(() => MacroRef)
+  SubInput,
+  SubLink,
+  types.late(() => SubRef)
 );
 
-export const Macro = types
-  .model("Macro", {
+export const Sub = types
+  .model("Sub", {
     id: types.identifier(types.string),
-    macro: types.map(types.array(MacroNode))
+    sub: types.map(types.array(SubNode))
   })
   .actions(self => {
     const cache = getEnv(self).cache || {};
@@ -126,13 +136,13 @@ export const Macro = types
     };
   });
 
-export const MacroRef = types.model("MacroRef", {
-  macroRef: types.reference(Macro)
+export const SubRef = types.model("SubRef", {
+  subRef: types.reference(Sub)
 });
 
 export const Graph = types.model("Graph", {
   links: types.map(Link),
-  macros: types.map(Macro)
+  subs: types.map(Sub)
 });
 
 export const GraphView = types
