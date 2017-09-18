@@ -4,6 +4,9 @@ export const global = "g";
 
 export const access = ".";
 
+export const array = "[";
+export const object = "{";
+
 export const add = "+";
 export const subtract = "-";
 export const multiply = "*";
@@ -43,6 +46,8 @@ export const Op = types.model("Op", {
   op: types.enumeration("Op", [
     global,
     access,
+    array,
+    object,
     add,
     subtract,
     multiply,

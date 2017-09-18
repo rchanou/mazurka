@@ -5,24 +5,25 @@ it("does stuff", () => {
     {
       graph: {
         links: {
-          0: { id: "0", link: [{ op: "." }] },
-          1: { id: "1", link: ["test"] },
-          2: { id: "2", link: [{ op: "+" }, 2, 3] },
-          3: { id: "3", link: [{ op: "+" }, { key: 0 }, { key: 1 }] },
-          4: { id: "4", link: [{ ref: "3" }] },
-          5: { id: "5", link: [{ ref: "4" }] }
+          0: { id: "0", link: [{ op: "g" }, "Math"] },
+          1: { id: "1", link: [{ op: "." }, { ref: "0" }, "pow"] },
+          2: { id: "2", link: [{ op: "." }, { ref: "0" }, "sqrt"] },
+          3: { id: "3", link: [{ op: "g" }, "console"] },
+          4: {
+            id: "4",
+            link: [{ macroRef: "0" }, { key: "0" }, null, { key: "1" }]
+          },
+          5: { id: "5", link: [{ op: "[" }, 1, 2, 3] },
+          6: { id: "6", link: [{ ref: "4" }, { op: "+" }] }
         },
         macros: {
           0: {
             id: "0",
-            macro: { 0: [{ ref: 1 }, { key: 0 }, { key: 1 }] }
-          },
-          1: { id: "1", macro: { 0: [{ op: "+" }, { key: 0 }, { key: 1 }] } }
+            macro: { 0: [{ op: "." }, { key: ".0" }, "apply"],1:[{}] }
+          }
         }
       }
     },
-    { cache: { 0: 1 } }
+    { cache: {} }
   );
-  const test = graphView.graph.links.get("4").link[0].ref.id;
-  console.log(test);
 });
