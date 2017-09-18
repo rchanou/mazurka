@@ -89,7 +89,7 @@ export const Op = types
 
 export const Input = types
   .model("Input", {
-    id: types.identifier(types.number)
+    in: types.string
   })
   .views(self => ({
     get val() {
@@ -100,7 +100,6 @@ export const Input = types
 curry.placeholder = Input;
 
 export const Node = types.union(
-  // Primitive,
   Val,
   Op,
   Input,
@@ -108,14 +107,14 @@ export const Node = types.union(
   types.late(() => SubRef)
 );
 
+const identity = x => x;
+
 export const Link = types
   .model("Link", {
     id: types.identifier(types.string),
     link: types.array(Node)
   })
   .views(self => {
-    // const env = getEnv(self) || {};
-
     return {
       get val() {
         const nodeVals = self.link.map(node => node.val);
@@ -126,8 +125,9 @@ export const Link = types
             const curried = curry(head, params.length);
             return curried(...params);
           }
-
           return head(...params);
+        } else if (head === Input) {
+          return identity;
         } else {
           return head;
         }
@@ -152,7 +152,6 @@ export const SubLink = types.model("SubLink", {
 });
 
 export const SubNode = types.union(
-  // Primitive,
   Val,
   Op,
   Input,
@@ -162,16 +161,10 @@ export const SubNode = types.union(
   types.late(() => SubRef)
 );
 
-export const Sub = types
-  .model("Sub", {
-    id: types.identifier(types.string),
-    sub: types.map(types.array(SubNode))
-  })
-  .views(self => ({
-    with(...nodes: any[]) {
-      return;
-    }
-  }));
+export const Sub = types.model("Sub", {
+  id: types.identifier(types.string),
+  sub: types.map(types.array(SubNode))
+});
 
 export const SubRef = types.model("SubRef", {
   subRef: types.reference(Sub)
@@ -186,7 +179,9 @@ export const Graph = types
     return {
       expandSub(subId: string, ...params: any[]) {
         const sub = self.subs.get(subId);
-        params.forEach(param => {});
+        //   sub.forEach(
+        //     entry
+        //   )
       }
     };
   });

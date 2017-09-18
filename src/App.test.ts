@@ -10,13 +10,16 @@ it("does stuff", () => {
         3: { id: "3", link: [{ op: "g" }, { val: "console" }] },
         4: {
           id: "4",
-          link: [{ subRef: "0" }, { id: 0 }, { val: null }, { id: 1 }]
+          link: [{ subRef: "0" }, { in: "0" }, { val: null }, { in: "1" }]
         },
         5: { id: "5", link: [{ op: "[" }, { val: 1 }, { val: 3 }, { val: 5 }] },
         6: { id: "6", link: [{ ref: "4" }, { op: "+" }] },
         7: { id: "7", link: [{ ref: "1" }, { val: 3 }, { val: 2 }] },
-        8: { id: "8", link: [{ ref: "1" }, { id: 2 }, { val: 4 }] },
-        9: { id: "9", link: [{ ref: "8" }, { val: 3 }] }
+        8: { id: "8", link: [{ ref: "1" }, { in: "2" }, { val: 4 }] },
+        9: { id: "9", link: [{ ref: "8" }, { val: 3 }] },
+        10: { id: "10", link: [{ in: "5" }] },
+        11: { id: "11", link: [{ val: 4 }] },
+        12: { id: "12", link: [{ ref: "1" }, { ref: "11" }, { ref: "11" }] }
       },
       subs: {
         0: {
