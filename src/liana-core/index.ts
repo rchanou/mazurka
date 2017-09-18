@@ -68,15 +68,20 @@ export const Op = types.model("Op", {
 });
 
 export const Input = types.model("Input", {
-  id: types.identifier(types.string)
+  key: types.number
 });
 
-export const Node = types.union(Primitive, Op, Input);
+export const Node = types.union(
+  Primitive,
+  Op,
+  Input,
+  types.late(() => LinkRef)
+);
 
 export const Link = types
   .model("Link", {
     id: types.identifier(types.string),
-    link: types.array(Node)
+    link: types.refinement(types.array(Node), value => value.length <= 3)
   })
   .views(self => {
     const cache = getEnv(self).cache || {};
@@ -88,18 +93,18 @@ export const Link = types
     };
   });
 
-export const Param = types.model("Param", { key: types.number });
+export const LinkRef = types.model("LinkRef", { ref: types.reference(Link) });
 
 export const Macro = types
   .model("Macro", {
     id: types.identifier(types.string),
-    macro: types.map(types.array(types.union(Primitive, Op, Param)))
+    macro: types.map(types.array(types.union(Primitive, Op, Input, LinkRef)))
   })
   .actions(self => {
     const cache = getEnv(self).cache || {};
 
     return {
-      evaluate(...inputIds) {
+      expand(...inputIds: string[]) {
         return 1;
       }
     };
@@ -117,16 +122,11 @@ export const GraphView = types
   .actions(self => {
     const cache = getEnv(self).cache || {}; // move to afterCreate hook?
 
-    const evaluate = linkId => {
-      const link = self.graph.get(linkId);
+    const evaluate = (linkId: string) => {
+      const link = self.graph.links.get(linkId);
     };
 
     return {
       evaluate
     };
   });
-
-/*
-  make link a proper model and place "evaluate" back on that? you can't evaluate a macro.
-
-  */
