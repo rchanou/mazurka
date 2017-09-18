@@ -1,78 +1,74 @@
 import { types } from "mobx-state-tree";
 
-const global = "g";
+export const global = "g";
 
-const access = ".";
+export const access = ".";
 
-const add = "+";
-const subtract = "-";
-const multiply = "*";
-const divide = "/";
-const mod = "%";
+export const add = "+";
+export const subtract = "-";
+export const multiply = "*";
+export const divide = "/";
+export const mod = "%";
 
-const ifOp = "?";
-const switchOp = "s";
-const forOp = "f";
-const importOp = "m";
-const newOp = "n";
-const typeofOp = "t";
-const instanceOfOp = "i";
-const classOp = "c";
-const thisOp = "h";
+export const ifOp = "?";
+export const switchOp = "s";
+export const forOp = "f";
+export const importOp = "m";
+export const newOp = "n";
+export const typeofOp = "t";
+export const instanceOfOp = "i";
+export const classOp = "c";
+export const thisOp = "h";
 
-const lessThan = "<";
-const greaterThan = ">";
-const lessThanOrEqual = "<=";
-const greaterThanOrEqual = ">=";
-const equal = "==";
-const strictEqual = "===";
-const notEqual = "!=";
-const notStrictEqual = "!==";
+export const lessThan = "<";
+export const greaterThan = ">";
+export const lessThanOrEqual = "<=";
+export const greaterThanOrEqual = ">=";
+export const equal = "==";
+export const strictEqual = "===";
+export const notEqual = "!=";
+export const notStrictEqual = "!==";
 
-const swap = "@";
+export const swap = "@";
 
 const Primitive = types.union(types.string, types.number, types.boolean);
 
-const Op = types.enumeration("Op", [
-  add,
-  subtract,
-  multiply,
-  divide,
-  mod,
-  ifOp,
-  switchOp,
-  forOp,
-  importOp,
-  newOp,
-  typeofOp,
-  instanceOfOp,
-  classOp,
-  thisOp,
-  lessThan,
-  greaterThan,
-  lessThanOrEqual,
-  greaterThanOrEqual,
-  equal,
-  strictEqual,
-  notEqual,
-  notStrictEqual,
-  swap
-]);
-
-const Input = types.model("Input", { id: types.identifier(types.number) });
-
-// const Node = types.model("Node", {
-//   value: types.union(Primitive, Op, Input)
-// });
-
-const Node = types.union(Primitive, Op, Input);
-
-const Link = types.model("Link", {
-  id: types.identifier(types.number),
-  from: types.array(Node)
+export const Op = types.model("Op", {
+  value: types.enumeration("Op", [
+    add,
+    subtract,
+    multiply,
+    divide,
+    mod,
+    ifOp,
+    switchOp,
+    forOp,
+    importOp,
+    newOp,
+    typeofOp,
+    instanceOfOp,
+    classOp,
+    thisOp,
+    lessThan,
+    greaterThan,
+    lessThanOrEqual,
+    greaterThanOrEqual,
+    equal,
+    strictEqual,
+    notEqual,
+    notStrictEqual,
+    swap
+  ])
 });
 
-export const Macro = types.model("Macro", {
-  id: types.identifier(types.number),
-  nodes: types.array(Link)
+export const Input = types.model("Input", {
+  id: types.identifier(types.number)
 });
+
+export const Node = types.union(Primitive, Op, Input);
+
+export const Link = types.union(types.array(Node));
+
+export const Macro = types.map(Link);
+
+export const Graph = types.map(types.union(Link, Macro));
