@@ -40,7 +40,9 @@ const Primitive = types.union(
 );
 
 export const Op = types.model("Op", {
-  do: types.enumeration("Op", [
+  op: types.enumeration("Op", [
+    global,
+    access,
     add,
     subtract,
     multiply,
@@ -75,13 +77,14 @@ export const Node = types.union(
   Primitive,
   Op,
   Input,
-  types.late(() => LinkRef)
+  types.late(() => LinkRef),
+  types.late(() => MacroRef)
 );
 
 export const Link = types
   .model("Link", {
     id: types.identifier(types.string),
-    link: types.refinement(types.array(Node), value => value.length <= 3)
+    link: types.array(Node)
   })
   .views(self => {
     const cache = getEnv(self).cache || {};
@@ -95,10 +98,18 @@ export const Link = types
 
 export const LinkRef = types.model("LinkRef", { ref: types.reference(Link) });
 
+export const MacroNode = types.union(
+  Primitive,
+  Op,
+  Input,
+  LinkRef,
+  types.late(() => MacroRef)
+);
+
 export const Macro = types
   .model("Macro", {
     id: types.identifier(types.string),
-    macro: types.map(types.array(types.union(Primitive, Op, Input, LinkRef)))
+    macro: types.map(types.array(MacroNode))
   })
   .actions(self => {
     const cache = getEnv(self).cache || {};
@@ -109,6 +120,10 @@ export const Macro = types
       }
     };
   });
+
+export const MacroRef = types.model("MacroRef", {
+  macroRef: types.reference(Macro)
+});
 
 export const Graph = types.model("Graph", {
   links: types.map(Link),

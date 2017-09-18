@@ -5,19 +5,19 @@ it("does stuff", () => {
     {
       graph: {
         links: {
-          0: { id: "0", link: [1] },
+          0: { id: "0", link: [{ op: "." }] },
           1: { id: "1", link: ["test"] },
-          2: { id: "2", link: [{ do: "+" }, 2, 3] },
-          3: { id: "3", link: [{ do: "+" }, { key: 0 }, { key: 1 }] },
+          2: { id: "2", link: [{ op: "+" }, 2, 3] },
+          3: { id: "3", link: [{ op: "+" }, { key: 0 }, { key: 1 }] },
           4: { id: "4", link: [{ ref: "3" }] },
           5: { id: "5", link: [{ ref: "4" }] }
         },
         macros: {
           0: {
             id: "0",
-            macro: { 0: [1] }
+            macro: { 0: [{ ref: 1 }, { key: 0 }, { key: 1 }] }
           },
-          1: { id: "1", macro: { 0: [{ do: "+" }, { key: 0 }, { key: 1 }] } }
+          1: { id: "1", macro: { 0: [{ op: "+" }, { key: 0 }, { key: 1 }] } }
         }
       }
     },
