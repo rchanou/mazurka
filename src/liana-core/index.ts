@@ -1,4 +1,5 @@
 import { types, getEnv, getChildType, getType } from "mobx-state-tree";
+const curry = require("lodash.curry");
 
 export const global = "g";
 
@@ -86,9 +87,17 @@ export const Op = types
     }
   }));
 
-export const Input = types.model("Input", {
-  id: types.identifier(types.number)
-});
+export const Input = types
+  .model("Input", {
+    id: types.identifier(types.number)
+  })
+  .views(self => ({
+    get val() {
+      return Input;
+    }
+  }));
+
+curry.placeholder = Input;
 
 export const Node = types.union(
   // Primitive,
@@ -105,11 +114,19 @@ export const Link = types
     link: types.array(Node)
   })
   .views(self => {
+    // const env = getEnv(self) || {};
+
     return {
       get val() {
         const nodeVals = self.link.map(node => node.val);
+
         const [head, ...params] = nodeVals;
         if (typeof head === "function") {
+          if (params.some(param => param === Input)) {
+            const curried = curry(head, params.length);
+            return curried(...params);
+          }
+
           return head(...params);
         } else {
           return head;
@@ -150,22 +167,29 @@ export const Sub = types
     id: types.identifier(types.string),
     sub: types.map(types.array(SubNode))
   })
-  .actions(self => {
-    return {
-      expand(...inputIds: string[]) {
-        return 1;
-      }
-    };
-  });
+  .views(self => ({
+    with(...nodes: any[]) {
+      return;
+    }
+  }));
 
 export const SubRef = types.model("SubRef", {
   subRef: types.reference(Sub)
 });
 
-export const Graph = types.model("Graph", {
-  links: types.map(Link),
-  subs: types.map(Sub)
-});
+export const Graph = types
+  .model("Graph", {
+    links: types.map(Link),
+    subs: types.map(Sub)
+  })
+  .actions(self => {
+    return {
+      expandSub(subId: string, ...params: any[]) {
+        const sub = self.subs.get(subId);
+        params.forEach(param => {});
+      }
+    };
+  });
 
 export const GraphView = types
   .model("GraphView", {

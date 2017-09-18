@@ -13,7 +13,10 @@ it("does stuff", () => {
           link: [{ subRef: "0" }, { id: 0 }, { val: null }, { id: 1 }]
         },
         5: { id: "5", link: [{ op: "[" }, { val: 1 }, { val: 3 }, { val: 5 }] },
-        6: { id: "6", link: [{ ref: "4" }, { op: "+" }] }
+        6: { id: "6", link: [{ ref: "4" }, { op: "+" }] },
+        7: { id: "7", link: [{ ref: "1" }, { val: 3 }, { val: 2 }] },
+        8: { id: "8", link: [{ ref: "1" }, { id: 2 }, { val: 4 }] },
+        9: { id: "9", link: [{ ref: "8" }, { val: 3 }] }
       },
       subs: {
         0: {
@@ -26,5 +29,5 @@ it("does stuff", () => {
       }
     }
   });
-  console.log(graphView.graph.links.get(1).val);
+  console.log(graphView.graph.links.get(9).val);
 });
