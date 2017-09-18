@@ -31,7 +31,13 @@ export const notStrictEqual = "!==";
 
 export const swap = "@";
 
-const Primitive = types.union(types.string, types.number, types.boolean);
+const Primitive = types.union(
+  types.string,
+  types.number,
+  types.boolean,
+  types.null,
+  types.undefined
+);
 
 export const Op = types.model("Op", {
   do: types.enumeration("Op", [
@@ -62,16 +68,47 @@ export const Op = types.model("Op", {
 });
 
 export const Input = types.model("Input", {
-  id: types.identifier(types.number)
+  id: types.identifier(types.string)
 });
 
 export const Node = types.union(Primitive, Op, Input);
 
-export const Link = types.union(types.array(Node));
+export const Link = types
+  .model("Link", {
+    id: types.identifier(types.string),
+    link: types.array(Node)
+  })
+  .views(self => {
+    const cache = getEnv(self).cache || {};
 
-export const Macro = types.map(Link);
+    return {
+      get value() {
+        return 1;
+      }
+    };
+  });
 
-export const Graph = types.map(types.union(Link, Macro));
+export const Param = types.model("Param", { key: types.number });
+
+export const Macro = types
+  .model("Macro", {
+    id: types.identifier(types.string),
+    macro: types.map(types.array(types.union(Primitive, Op, Param)))
+  })
+  .actions(self => {
+    const cache = getEnv(self).cache || {};
+
+    return {
+      evaluate(...inputIds) {
+        return 1;
+      }
+    };
+  });
+
+export const Graph = types.model("Graph", {
+  links: types.map(Link),
+  macros: types.map(Macro)
+});
 
 export const GraphView = types
   .model("GraphView", {
@@ -82,15 +119,14 @@ export const GraphView = types
 
     const evaluate = linkId => {
       const link = self.graph.get(linkId);
-      const linkType = getType(link);
-      if (linkType === Macro) {
-        console.log("whoa nelly!");
-      } else {
-        console.log("naw");
-      }
     };
 
     return {
       evaluate
     };
   });
+
+/*
+  make link a proper model and place "evaluate" back on that? you can't evaluate a macro.
+
+  */
