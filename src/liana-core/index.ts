@@ -1,4 +1,4 @@
-import { types } from "mobx-state-tree";
+import { types, getEnv, getType } from "mobx-state-tree";
 
 export const global = "g";
 
@@ -34,7 +34,7 @@ export const swap = "@";
 const Primitive = types.union(types.string, types.number, types.boolean);
 
 export const Op = types.model("Op", {
-  value: types.enumeration("Op", [
+  do: types.enumeration("Op", [
     add,
     subtract,
     multiply,
@@ -72,3 +72,25 @@ export const Link = types.union(types.array(Node));
 export const Macro = types.map(Link);
 
 export const Graph = types.map(types.union(Link, Macro));
+
+export const GraphView = types
+  .model("GraphView", {
+    graph: Graph
+  })
+  .actions(self => {
+    const cache = getEnv(self).cache || {}; // move to afterCreate hook?
+
+    const evaluate = linkId => {
+      const link = self.graph.get(linkId);
+      const linkType = getType(link);
+      if (linkType === Macro) {
+        console.log("whoa nelly!");
+      } else {
+        console.log("naw");
+      }
+    };
+
+    return {
+      evaluate
+    };
+  });
