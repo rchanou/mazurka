@@ -1,4 +1,4 @@
-import { types, getEnv, getType } from "mobx-state-tree";
+import { types, getEnv, getChildType, getType } from "mobx-state-tree";
 
 export const global = "g";
 
@@ -34,52 +34,65 @@ export const notStrictEqual = "!==";
 
 export const swap = "@";
 
-const Primitive = types.union(
-  types.string,
-  types.number,
-  types.boolean,
-  types.null,
-  types.undefined
-);
+const opFuncs = {
+  [global](val) {
+    return window[val];
+    // return eval(val);
+  },
+  [access](obj, key) {
+    return obj[key];
+  }
+};
 
-export const Op = types.model("Op", {
-  op: types.enumeration("Op", [
-    global,
-    access,
-    array,
-    object,
-    add,
-    subtract,
-    multiply,
-    divide,
-    mod,
-    ifOp,
-    switchOp,
-    forOp,
-    importOp,
-    newOp,
-    typeofOp,
-    instanceOfOp,
-    classOp,
-    thisOp,
-    lessThan,
-    greaterThan,
-    lessThanOrEqual,
-    greaterThanOrEqual,
-    equal,
-    strictEqual,
-    notEqual,
-    notStrictEqual,
-    swap
-  ])
+export const Val = types.model("Val", {
+  val: types.union(types.string, types.number, types.boolean, types.null)
 });
+
+export const Op = types
+  .model("Op", {
+    op: types.enumeration("OpEnum", [
+      global,
+      access,
+      array,
+      object,
+      add,
+      subtract,
+      multiply,
+      divide,
+      mod,
+      ifOp,
+      switchOp,
+      forOp,
+      importOp,
+      newOp,
+      typeofOp,
+      instanceOfOp,
+      classOp,
+      thisOp,
+      lessThan,
+      greaterThan,
+      lessThanOrEqual,
+      greaterThanOrEqual,
+      equal,
+      strictEqual,
+      notEqual,
+      notStrictEqual,
+      swap
+    ])
+  })
+  .views(self => ({
+    get val() {
+      return opFuncs[self.op];
+    }
+  }));
 
 export const Input = types.model("Input", {
   id: types.identifier(types.number)
 });
 
 export const Node = types.union(
-  Primitive,
+  // Primitive,
+  Val,
   Op,
   Input,
   types.late(() => LinkRef),
@@ -92,16 +105,26 @@ export const Link = types
     link: types.array(Node)
   })
   .views(self => {
-    const cache = getEnv(self).cache || {};
-
     return {
-      get value() {
-        return 1;
+      get val() {
+        const nodeVals = self.link.map(node => node.val);
+        const [head, ...params] = nodeVals;
+        if (typeof head === "function") {
+          return head(...params);
+        } else {
+          return head;
+        }
       }
     };
   });
 
-export const LinkRef = types.model("LinkRef", { ref: types.reference(Link) });
+export const LinkRef = types
+  .model("LinkRef", { ref: types.reference(Link) })
+  .views(self => ({
+    get val() {
+      return self.ref.val;
+    }
+  }));
 
 export const SubInput = types.model("SubInput", {
   subInput: types.number
@@ -112,7 +135,8 @@ export const SubLink = types.model("SubLink", {
 });
 
 export const SubNode = types.union(
-  Primitive,
+  // Primitive,
+  Val,
   Op,
   Input,
   LinkRef,
@@ -127,8 +151,6 @@ export const Sub = types
     sub: types.map(types.array(SubNode))
   })
   .actions(self => {
-    const cache = getEnv(self).cache || {};
-
     return {
       expand(...inputIds: string[]) {
         return 1;
@@ -150,8 +172,6 @@ export const GraphView = types
     graph: Graph
   })
   .actions(self => {
-    const cache = getEnv(self).cache || {}; // move to afterCreate hook?
-
     const evaluate = (linkId: string) => {
       const link = self.graph.links.get(linkId);
     };
