@@ -1,7 +1,11 @@
 import * as L from "./liana-core";
 import * as _ from "lodash";
+import { pull } from "./liana-core/module-env";
 
-const getReact = () => import("react");
+it("pulls and caches deps", async () => {
+  const depIds = ["https://unpkg.com/redux@3.7.2/dist/redux.min.js"];
+  const deps = await pull(depIds);
+});
 
 it("does stuff", async () => {
   const graphView = L.GraphView.create({
@@ -66,9 +70,7 @@ it("does stuff", async () => {
   const subLink = graphView.graph.subs.get(0).sub.get(0)[0].ref.link;
   // console.log(subLink, 'le link')
   graphView.graph.expandSub("0", "24", { ref: "5" });
-  const e = getVal('24-2');
-  console.log(e)
+  const e = getVal("24-2");
+  console.log(e);
   // console.log(a(b, c));
-
-  // console.log(await getReact());
 });

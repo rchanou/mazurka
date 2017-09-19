@@ -12,7 +12,8 @@
     "mobx-state-tree": "^0.11.0",
     "react": "16.0.0-rc.2",
     "react-dom": "16.0.0-rc.2",
-    "react-scripts-ts": "2.6.0"
+    "react-scripts-ts": "2.6.0",
+    "systemjs": "^0.20.19"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -26,6 +27,7 @@
     "@storybook/addon-actions": "^3.2.6",
     "@storybook/addon-links": "^3.2.6",
     "@storybook/react": "^3.2.8",
-    "@types/lodash": "^4.14.74"
+    "@types/lodash": "^4.14.74",
+    "@types/systemjs": "^0.20.5"
   }
 }

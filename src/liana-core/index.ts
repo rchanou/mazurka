@@ -232,14 +232,14 @@ export const Graph = types
                 return params[val];
               case SubLink:
                 return { ref: `${baseId}-${val}` };
-              case Val:
-                return val;
-              default:
+              case LinkRef:
                 const retVal = { ref: node.ref.id };
                 return retVal;
+              default:
+                return val;
             }
           });
-           console.log("idd", { id: `${baseId}-${i}`, link });
+          console.log("idd", { id: `${baseId}-${i}`, link });
           links.put({ id: `${baseId}-${i}`, link });
         });
       }
