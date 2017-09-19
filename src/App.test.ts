@@ -1,7 +1,9 @@
 import * as L from "./liana-core";
 import * as _ from "lodash";
 
-it("does stuff", () => {
+const getReact = () => import("react");
+
+it("does stuff", async () => {
   const graphView = L.GraphView.create({
     graph: {
       links: {
@@ -37,7 +39,6 @@ it("does stuff", () => {
         18: { id: "18", link: [{ op: "." }, { ref: "17" }, { val: "map" }] },
         19: { id: "19", link: [{ op: "+" }, { in: "11" }, { val: 5.4 }] },
         20: { id: "20", link: [{ ref: "18" }, { ref: "5" }, { ref: "19" }] }
-        // 21: { id: "21", link: [{ ref: "20" }, { ref: "5" }] }
       },
       subs: {
         0: {
@@ -56,4 +57,6 @@ it("does stuff", () => {
   const b = getVal(5);
   const c = getVal(19);
   console.log(a(b, c));
+
+  console.log(await getReact());
 });
