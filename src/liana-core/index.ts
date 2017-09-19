@@ -219,23 +219,28 @@ export const Graph = types
   .actions(self => {
     return {
       expandSub(subId: string, baseId: string, ...params: any[]) {
-        const sub = self.subs.get(subId);
+        const { sub } = self.subs.get(subId);
         const { links } = self;
 
-        sub.forEach(subLink => {
-          const finalLink = subLink.map(node => {
+        let inputCounter = 0;
+        sub.forEach((subLink, i) => {
+          const link = subLink.map(node => {
             const nodeType = getType(node);
             const { val } = node;
-
             switch (nodeType) {
               case SubParam:
-                return { in: `${baseId}` };
+                return params[val];
               case SubLink:
-
-              default:
+                return { ref: `${baseId}-${val}` };
+              case Val:
                 return val;
+              default:
+                const retVal = { ref: node.ref.id };
+                return retVal;
             }
           });
+           console.log("idd", { id: `${baseId}-${i}`, link });
+          links.put({ id: `${baseId}-${i}`, link });
         });
       }
     };

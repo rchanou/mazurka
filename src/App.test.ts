@@ -38,14 +38,19 @@ it("does stuff", async () => {
         17: { id: "17", link: [{ op: "_" }] },
         18: { id: "18", link: [{ op: "." }, { ref: "17" }, { val: "map" }] },
         19: { id: "19", link: [{ op: "+" }, { in: "11" }, { val: 5.4 }] },
-        20: { id: "20", link: [{ ref: "18" }, { ref: "5" }, { ref: "19" }] }
+        20: { id: "20", link: [{ ref: "18" }, { ref: "5" }, { ref: "19" }] },
+        21: { id: "21", link: [{ ref: "1" }, { in: "12" }, { val: 2 }] },
+        22: { id: "22", link: [{ op: "." }, { ref: "17" }, { val: "spread" }] },
+        23: { id: "23", link: [{ ref: "22" }, { op: "+" }] }
+        // 24:{id:'24',link:[{ref:'23'},]}
       },
       subs: {
         0: {
           id: "0",
           sub: {
-            0: [{ op: "." }, { param: 0 }, { val: "map" }],
-            1: [{ subLink: 0 }, { param: 1 }, { param: 2 }]
+            0: [{ ref: "18" }, { param: 0 }, { ref: "21" }],
+            1: [{ ref: "23" }, { subLink: 0 }],
+            2: [{ ref: "2" }, { subLink: 1 }]
           }
         }
       }
@@ -56,7 +61,14 @@ it("does stuff", async () => {
   const a = getVal(18);
   const b = getVal(5);
   const c = getVal(19);
-  console.log(a(b, c));
+  const d = getVal(23);
 
-  console.log(await getReact());
+  const subLink = graphView.graph.subs.get(0).sub.get(0)[0].ref.link;
+  // console.log(subLink, 'le link')
+  graphView.graph.expandSub("0", "24", { ref: "5" });
+  const e = getVal('24-2');
+  console.log(e)
+  // console.log(a(b, c));
+
+  // console.log(await getReact());
 });
