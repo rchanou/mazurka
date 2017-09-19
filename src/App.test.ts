@@ -55,5 +55,5 @@ it("does stuff", () => {
   const a = getVal(18);
   const b = getVal(5);
   const c = getVal(19);
-  console.log(c(3), _.map([2, 5], c));
+  console.log(a(b, c));
 });

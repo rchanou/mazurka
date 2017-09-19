@@ -48,9 +48,11 @@ const opFuncs = {
     return obj[key];
   },
   [add](...nums: number[]) {
+    // return nums.reduce((sum, num) => sum + num, 0);
     let sum = 0;
     for (const num of nums) {
       sum += num;
+      console.log(num, sum);
     }
     return sum;
   },
@@ -139,9 +141,11 @@ export const Link = types
 
         const [head, ...params] = nodeVals;
         if (typeof head === "function") {
-          if (params.some(param => param === Input)) {
+          const inputs = params.filter(param => param === Input);
+          if (inputs.length) {
+            console.log(head, params, params.length);
             const curried = curry(head, params.length);
-            return curried(...params);
+            return _.ary(curried(...params), inputs.length);
           }
           return head(...params);
         } else {
