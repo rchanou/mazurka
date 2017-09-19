@@ -1,4 +1,6 @@
 import { types, getEnv, getChildType, getType } from "mobx-state-tree";
+import { observable, action, runInAction } from "mobx";
+import { import as pull } from "systemjs";
 import * as _ from "lodash";
 
 const { curry } = _;
@@ -102,6 +104,63 @@ export const Op = types
   .views(self => ({
     get val() {
       return opFuncs[self.op];
+    }
+  }));
+
+class PackageBox {
+  @observable dependency = null;
+
+  constructor(depId) {
+    this.fetchDependency(depId);
+  }
+
+  @action.bound
+  async fetchDependency(depId) {
+    console.log("le dep id", depId);
+    const resolved = await pull(depId);
+    runInAction(() => {
+      this.dependency = resolved;
+    });
+  }
+}
+console.log("shibot");
+export const Package = types
+  .model("Package", {
+    id: types.identifier(types.number),
+    path: types.string,
+    resolved: false
+  })
+  .actions(self => ({
+    resolve() {
+      self.resolved = true;
+    }
+  }))
+  .views(self => {
+    // const packageBox = new PackageBox(self.path);
+    let pkg;
+    console.log("le path", self.path);
+    // pull(self.path).then(module => {
+    //   pkg = module;
+    //   self.resolve();
+    // });
+
+    return {
+      get val() {
+        if (!self.resolved) {
+          return null;
+        }
+        return pkg;
+      }
+    };
+  });
+
+export const PackageRef = types
+  .model("PackageRef", {
+    pkg: types.reference(Package)
+  })
+  .views(self => ({
+    get val() {
+      return self.pkg.val;
     }
   }));
 
@@ -213,8 +272,9 @@ export const SubRef = types
 
 export const Graph = types
   .model("Graph", {
-    links: types.map(Link),
-    subs: types.map(Sub)
+    packages: types.optional(types.map(Package), {}),
+    links: types.optional(types.map(Link), {}),
+    subs: types.optional(types.map(Sub), {})
   })
   .actions(self => {
     return {

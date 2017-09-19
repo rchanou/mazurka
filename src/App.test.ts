@@ -1,15 +1,23 @@
-import * as L from "./liana-core";
-import * as _ from "lodash";
-import { pull } from "./liana-core/module-env";
+import { getSnapshot } from "mobx-state-tree";
+import { autorun } from "mobx";
 
-it("pulls and caches deps", async () => {
-  const depIds = ["https://unpkg.com/redux@3.7.2/dist/redux.min.js"];
-  const deps = await pull(depIds);
-});
+import * as L from "./liana-core";
+// import { pull } from "./liana-core/utils";
+
+// it("pulls and caches deps", async () => {
+//   return;
+//   const depIds = ["https://unpkg.com/redux@3.7.2/dist/redux.min.js"];
+//   const deps = await pull(depIds);
+// });
 
 it("does stuff", async () => {
+  // await pull("https://unpkg.com/redux@3.7.2/dist/redux.min.js");
+  console.log("sno");
   const graphView = L.GraphView.create({
     graph: {
+      packages: {
+        0: { id: 0, path: "https://unpkg.com/redux@3.7.2/dist/redux.min.js" }
+      },
       links: {
         0: { id: "0", link: [{ op: "g" }, { val: "Math" }] },
         1: { id: "1", link: [{ op: "." }, { ref: "0" }, { val: "pow" }] },
@@ -61,16 +69,24 @@ it("does stuff", async () => {
     }
   });
 
-  const getVal = id => graphView.graph.links.get(id).val;
+  const { graph } = graphView;
+
+  const getVal = id => graph.links.get(id).val;
   const a = getVal(18);
   const b = getVal(5);
   const c = getVal(19);
   const d = getVal(23);
 
-  const subLink = graphView.graph.subs.get(0).sub.get(0)[0].ref.link;
+  const subLink = graph.subs.get(0).sub.get(0)[0].ref.link;
   // console.log(subLink, 'le link')
   graphView.graph.expandSub("0", "24", { ref: "5" });
   const e = getVal("24-2");
-  console.log(e);
-  // console.log(a(b, c));
+  // console.log(e);
+
+  const snap = getSnapshot(graph.links);
+  // console.log(JSON.stringify(snap));
+
+  // autorun(() => {
+  //   console.log("le pkg", graph.packages.get(0).val);
+  // });
 });
