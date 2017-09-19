@@ -1,5 +1,9 @@
 import { types, getEnv, getChildType, getType } from "mobx-state-tree";
-const curry = require("lodash.curry");
+import * as _ from "lodash";
+
+const { curry } = _;
+
+export const lodash = "_";
 
 export const global = "g";
 
@@ -42,6 +46,19 @@ const opFuncs = {
   },
   [access](obj, key) {
     return obj[key];
+  },
+  [add](...nums: number[]) {
+    let sum = 0;
+    for (const num of nums) {
+      sum += num;
+    }
+    return sum;
+  },
+  [array](...items: any[]) {
+    return items;
+  },
+  [lodash]() {
+    return _;
   }
 };
 
@@ -52,6 +69,7 @@ export const Val = types.model("Val", {
 export const Op = types
   .model("Op", {
     op: types.enumeration("OpEnum", [
+      lodash,
       global,
       access,
       array,
@@ -126,8 +144,6 @@ export const Link = types
             return curried(...params);
           }
           return head(...params);
-        } else if (head === Input) {
-          return identity;
         } else {
           return head;
         }
@@ -143,32 +159,56 @@ export const LinkRef = types
     }
   }));
 
-export const SubInput = types.model("SubInput", {
-  subInput: types.number
-});
+export const SubParam = types
+  .model("SubInput", {
+    param: types.number
+  })
+  .views(self => ({
+    get val() {
+      return self.param;
+    }
+  }));
 
-export const SubLink = types.model("SubLink", {
-  subLink: types.number
-});
+export const SubLink = types
+  .model("SubLink", {
+    subLink: types.number
+  })
+  .views(self => ({
+    get val() {
+      return self.subLink;
+    }
+  }));
 
 export const SubNode = types.union(
   Val,
   Op,
   Input,
   LinkRef,
-  SubInput,
+  SubParam,
   SubLink,
   types.late(() => SubRef)
 );
 
-export const Sub = types.model("Sub", {
-  id: types.identifier(types.string),
-  sub: types.map(types.array(SubNode))
-});
+export const Sub = types
+  .model("Sub", {
+    id: types.identifier(types.string),
+    sub: types.map(types.array(SubNode))
+  })
+  .views(self => ({
+    get val() {
+      return self;
+    }
+  }));
 
-export const SubRef = types.model("SubRef", {
-  subRef: types.reference(Sub)
-});
+export const SubRef = types
+  .model("SubRef", {
+    subRef: types.reference(Sub)
+  })
+  .views(self => ({
+    get val() {
+      return self.subRef;
+    }
+  }));
 
 export const Graph = types
   .model("Graph", {
@@ -177,11 +217,25 @@ export const Graph = types
   })
   .actions(self => {
     return {
-      expandSub(subId: string, ...params: any[]) {
+      expandSub(subId: string, baseId: string, ...params: any[]) {
         const sub = self.subs.get(subId);
-        //   sub.forEach(
-        //     entry
-        //   )
+        const { links } = self;
+
+        sub.forEach(subLink => {
+          const finalLink = subLink.map(node => {
+            const nodeType = getType(node);
+            const { val } = node;
+
+            switch (nodeType) {
+              case SubParam:
+                return { in: `${baseId}` };
+              case SubLink:
+
+              default:
+                return val;
+            }
+          });
+        });
       }
     };
   });
