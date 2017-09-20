@@ -1,6 +1,4 @@
 import { types, getEnv, getChildType, getType, process } from "mobx-state-tree";
-import { observable, action, runInAction } from "mobx";
-// import { import as pull } from "systemjs";
 import * as _ from "lodash";
 
 const { curry } = _;
@@ -49,14 +47,14 @@ const opFuncs = {
   [access](obj, key) {
     return obj[key];
   },
-  [add](...nums: number[]) {
+  [add](...nums) {
     let sum = 0;
     for (const num of nums) {
       sum += num;
     }
     return sum;
   },
-  [array](...items: any[]) {
+  [array](...items) {
     return items;
   },
   [lodash]() {
@@ -107,27 +105,6 @@ export const Op = types
     }
   }));
 
-class PackageBox {
-  @observable dependency = null;
-
-  constructor(depId) {
-    this.fetchDependency(depId);
-  }
-
-  @action.bound
-  async fetchDependency(depId) {
-    console.log("le dep id", depId);
-    const resolved = await pull(depId);
-    runInAction(() => {
-      this.dependency = resolved;
-    });
-  }
-}
-
-// pull("https://unpkg.com/redux@3.7.2/dist/redux.min.js").then(pkg =>
-//   console.log("homeoby", pkg)
-// );
-
 export const Package = types
   .model("Package", {
     id: types.identifier(types.number),
@@ -135,32 +112,24 @@ export const Package = types
     resolved: false
   })
   .actions(self => {
-    let pkg;
-
-    const { system, pull } = getEnv(self);
+    const { system } = getEnv(self);
 
     return {
       afterCreate: process(function*() {
-        console.log("le path", self.path);
-        yield system.import.call(system, self.path);
-        console.log("le respones", pkg);
+        yield system.import(self.path);
         self.resolved = true;
-      }),
-      resolve() {
-        self.resolved = true;
-      }
+      })
     };
   })
   .views(self => {
-    // const packageBox = new PackageBox(self.path);
+    const { system } = getEnv(self);
 
     return {
       get val() {
         if (!self.resolved) {
-          return {};
+          return null;
         }
-        return "hadoop";
-        // return pkg;
+        return system.get(self.path);
       }
     };
   });
@@ -289,7 +258,7 @@ export const Graph = types
   })
   .actions(self => {
     return {
-      expandSub(subId: string, baseId: string, ...params: any[]) {
+      expandSub(subId, baseId, ...params) {
         const { sub } = self.subs.get(subId);
         const { links } = self;
 
@@ -322,7 +291,7 @@ export const GraphView = types
     graph: Graph
   })
   .actions(self => {
-    const evaluate = (linkId: string) => {
+    const evaluate = linkId => {
       const link = self.graph.links.get(linkId);
     };
 
