@@ -59,12 +59,28 @@ const opFuncs = {
   },
   [lodash]() {
     return _;
+  },
+  ifOp(condition, trueVal, falseVal) {
+    return condition ? trueVal : falseVal;
+  },
+  switchOp(context, switcher, ...casePairs) {
+    for (let i = 0; i < casePairs.length; i += 2) {
+      if (switcher === casePairs[i]) {
+        return casePairs[i + 1](context);
+      }
+    }
   }
 };
 
-export const Val = types.model("Val", {
-  val: types.union(types.string, types.number, types.boolean, types.null)
-});
+export const Val = types
+  .model("Val", {
+    val: types.union(types.string, types.number, types.boolean, types.null)
+  })
+  .views(self => ({
+    with() {
+      return self.val;
+    }
+  }));
 
 export const Op = types
   .model("Op", {
@@ -102,6 +118,9 @@ export const Op = types
   .views(self => ({
     get val() {
       return opFuncs[self.op];
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -117,6 +136,7 @@ export const Package = types
     return {
       afterCreate: process(function*() {
         yield system.import(self.path);
+        // TODO: error handling (retry?)
         self.resolved = true;
       })
     };
@@ -126,10 +146,13 @@ export const Package = types
 
     return {
       get val() {
-        if (!self.resolved) {
-          return null;
+        if (self.resolved) {
+          return system.get(self.path);
         }
-        return system.get(self.path);
+        return Package;
+      },
+      with() {
+        return self.val;
       }
     };
   });
@@ -141,6 +164,9 @@ export const PackageRef = types
   .views(self => ({
     get val() {
       return self.pkg.val;
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -151,18 +177,26 @@ export const Input = types
   .views(self => ({
     get val() {
       return Input;
+    },
+    with() {
+      return self.val;
     }
   }));
 
 curry.placeholder = Input;
 
-export const Node = types.union(
-  Val,
-  Op,
-  Input,
-  types.late(() => LinkRef),
-  types.late(() => SubRef)
-);
+export const Param = types
+  .model("Param", {
+    param: types.identifier(types.string)
+  })
+  .views(self => ({
+    with(params) {
+      // debugger;
+      return params.get(self.param).val;
+    }
+  }));
+
+export const Node = types.union(Val, Op, Input, Param, types.late(() => LinkRef), types.late(() => SubRef), PackageRef);
 
 const identity = x => x;
 
@@ -175,6 +209,9 @@ export const Link = types
     return {
       get val() {
         const nodeVals = self.link.map(node => node.val);
+        if (nodeVals.indexOf(Package) !== -1) {
+          return Package;
+        }
 
         const [head, ...params] = nodeVals;
         if (typeof head === "function") {
@@ -187,15 +224,58 @@ export const Link = types
         } else {
           return head;
         }
+      },
+      with(params) {
+        // const nodeTypes = self.link.map(getType);
+        // if (nodeTypes.indexOf(Param) !== -1) {
+        //   console.log("dat type doe");
+
+        // }
+
+        const nodeVals = self.link.map(node => node.with(params));
+
+        if (nodeVals.indexOf(Package) !== -1) {
+          return Package;
+        }
+
+        const [head, ...nodeParams] = nodeVals;
+        if (typeof head === "function") {
+          const inputs = nodeParams.filter(param => param === Input);
+          if (inputs.length) {
+            const curried = curry(head, nodeParams.length);
+            return _.ary(curried(...nodeParams), inputs.length);
+          }
+          return head(...nodeParams);
+        } else {
+          return head;
+        }
       }
     };
   });
 
-export const LinkRef = types
-  .model("LinkRef", { ref: types.reference(Link) })
+export const LinkRef = types.model("LinkRef", { ref: types.reference(Link) }).views(self => ({
+  get val() {
+    return self.ref.val;
+  },
+  with() {
+    return self.val;
+  }
+}));
+
+export const Call = types
+  .model("Call", {
+    id: types.identifier(types.string),
+    link: types.reference(Link),
+    params: types.map(types.reference(Link))
+  })
   .views(self => ({
     get val() {
-      return self.ref.val;
+      const linkVal = self.link.with(self.params);
+      // TODO: handle case of not all params fulfilled
+      return linkVal;
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -206,6 +286,9 @@ export const SubParam = types
   .views(self => ({
     get val() {
       return self.param;
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -216,18 +299,13 @@ export const SubLink = types
   .views(self => ({
     get val() {
       return self.subLink;
+    },
+    with() {
+      return self.val;
     }
   }));
 
-export const SubNode = types.union(
-  Val,
-  Op,
-  Input,
-  LinkRef,
-  SubParam,
-  SubLink,
-  types.late(() => SubRef)
-);
+export const SubNode = types.union(Val, Op, Input, LinkRef, SubParam, SubLink, types.late(() => SubRef));
 
 export const Sub = types
   .model("Sub", {
@@ -237,6 +315,9 @@ export const Sub = types
   .views(self => ({
     get val() {
       return self;
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -247,6 +328,9 @@ export const SubRef = types
   .views(self => ({
     get val() {
       return self.subRef;
+    },
+    with() {
+      return self.val;
     }
   }));
 
@@ -254,6 +338,7 @@ export const Graph = types
   .model("Graph", {
     packages: types.optional(types.map(Package), {}),
     links: types.optional(types.map(Link), {}),
+    calls: types.optional(types.map(Call), {}),
     subs: types.optional(types.map(Sub), {})
   })
   .actions(self => {
