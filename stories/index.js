@@ -70,8 +70,9 @@ class Test extends React.Component {
               id: "22",
               link: [{ op: "." }, { ref: "17" }, { val: "spread" }]
             },
-            23: { id: "23", link: [{ ref: "22" }, { op: "+" }] }
-            // 24:{id:'24',link:[{ref:'23'},]}
+            23: { id: "23", link: [{ ref: "22" }, { op: "+" }] },
+            24: { id: "24", link: [{ op: "+" }, { in: "1" }, { val: 1 }] },
+            25: { id: "25", link: [{ op: "+" }, { in: "1" }, { val: -1 }] }
           },
           subs: {
             0: {
@@ -87,6 +88,19 @@ class Test extends React.Component {
       },
       { system: SystemJS }
     );
+
+    const flows = {
+      0: {
+        id: "0",
+        flow: {
+          0: [{ op: "." }, { param: 1 }, { val: "type" }],
+          1: [{ op: "s" }, { subRef: 0 }, { val: "INCREMENT" }, { ref: "24" }, { val: "DECREMENT" }, { ref: "25" }],
+          2: [{ subRef: 1 }, { param: 0 }],
+          3: [{ op: "==" }, { param: 0 }, { val: null }],
+          4: [{ op: "if" }, { subRef: 3 }, { val: 0 }, { subRef: 2 }]
+        }
+      }
+    };
 
     const { graph } = graphView;
 
