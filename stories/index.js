@@ -3,18 +3,17 @@ import { autorun } from "mobx";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-// const system = require("systemjs");
 // import { linkTo } from "@storybook/addon-links";
 // import { Button, Welcome } from "@storybook/react/demo";
-// import Biome, { hypotenuse } from "../src/biome";
 
 import * as L from "../src/liana-core";
 
 class Test extends React.Component {
   constructor(props) {
     super(props);
+
     const testDep = "https://unpkg.com/redux@3.7.2/dist/redux.min.js";
-    // const testPkg = await pull(testDep);
+
     const graphView = L.GraphView.create(
       {
         graph: {
@@ -102,7 +101,6 @@ class Test extends React.Component {
     graphView.graph.expandSub("0", "24", { ref: "5" });
     const e = getVal("24-2");
     // console.log(e);
-
     // const snap = getSnapshot(graph.links);
     // console.log(JSON.stringify(snap));
     // console.log("le test", testPkg);
@@ -117,8 +115,6 @@ class Test extends React.Component {
 }
 
 storiesOf("Liana", module).add("default", () => <Test />);
-
-// storiesOf("Biome", module).add("default", () => <Biome program={hypotenuse} />);
 
 // storiesOf("Welcome", module).add("to Storybook", () => (
 //   <Welcome showApp={linkTo("Button")} />
