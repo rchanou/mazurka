@@ -1,5 +1,6 @@
 import { types, getEnv, getChildType, getType, process } from "mobx-state-tree";
-import { curry, ary, flatMap } from "lodash";
+import { isObservableMap } from "mobx";
+import { curry, ary } from "lodash";
 
 export const lodash = "_";
 
@@ -212,9 +213,13 @@ export const Param = types
     with(params) {
       const { param } = self;
       if (params.has(param)) {
-        return params.get(param).val;
+        if (isObservableMap(params)) {
+          return params.get(param).val;
+        } else {
+          return params.get(param);
+        }
       } else {
-        return new Hole({ [param]: true }); // HACK
+        return new Hole({ [param]: true }); // HACK?
       }
     }
   }));
@@ -279,13 +284,13 @@ export const Call = types
   .views(self => ({
     get val() {
       const linkVal = self.link.with(self.params);
-      // TODO: test this
       if (linkVal instanceof Hole) {
-        return function(neededParams) {
-          return self.link.with({
-            ...self.params,
-            ...neededParams
-          });
+        const paramEntries = self.params.entries().slice();
+        return newParams => {
+          const newParamEntries = Object.entries(newParams);
+          const allParamEntries = [...paramEntries, ...newParamEntries];
+          const allParams = new Map(allParamEntries);
+          return self.link.with(allParams);
         };
       }
 

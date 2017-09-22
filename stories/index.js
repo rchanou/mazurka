@@ -98,10 +98,9 @@ class Test extends React.Component {
             0: {
               id: "0",
               link: "31",
-              params: {
-                a: "32"
-              }
-            }
+              params: { a: "32" }
+            },
+            1: { id: "1", link: "31", params: {} }
           },
           subs: {
             0: {
@@ -134,6 +133,8 @@ class Test extends React.Component {
     console.log(getVal("32"));
     const f = graph.calls.get(0).val;
     console.log("fff", f);
+    const g = graph.calls.get(1).val;
+    console.log("say what", g, g({ a: 37 }));
     // const snap = getSnapshot(graph.links);
     // console.log(JSON.stringify(snap));
     // console.log("le test", testPkg);
