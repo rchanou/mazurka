@@ -1,7 +1,5 @@
 import { types, getEnv, getChildType, getType, process } from "mobx-state-tree";
-import * as _ from "lodash";
-
-const { curry } = _;
+import { curry, ary, flatMap } from "lodash";
 
 export const lodash = "_";
 
@@ -192,6 +190,19 @@ export const Input = types
 
 curry.placeholder = Input;
 
+class Hole {
+  constructor(...paramSets) {
+    this.params = {};
+
+    for (const paramSet of paramSets) {
+      for (const param in paramSet) {
+        this.params[param] = true;
+      }
+    }
+    // this.params = params;
+  }
+}
+
 export const Param = types
   .model("Param", {
     param: types.identifier(types.string),
@@ -203,7 +214,7 @@ export const Param = types
       if (params.has(param)) {
         return params.get(param).val;
       } else {
-        return Param;
+        return new Hole({ [param]: true }); // HACK
       }
     }
   }));
@@ -220,33 +231,15 @@ export const Link = types
   .views(self => {
     return {
       get val() {
-        const nodeVals = self.link.map(node => node.val);
-        if (nodeVals.indexOf(Package) !== -1) {
-          return Package;
-        }
-
-        const [head, ...params] = nodeVals;
-        if (typeof head === "function") {
-          const inputs = params.filter(param => param === Input);
-          if (inputs.length) {
-            const curried = curry(head, params.length);
-            return _.ary(curried(...params), inputs.length);
-          }
-          return head(...params);
-        } else {
-          return head;
-        }
+        return self.with();
       },
       with(params) {
-        // const nodeTypes = self.link.map(getType);
-        // if (nodeTypes.indexOf(Param) !== -1) {
-        //   console.log("dat type doe");
-
-        // }
-
         const nodeVals = self.link.map(node => node.with(params));
 
-        if (nodeVals.indexOf(Param) !== -1) {
+        const holes = nodeVals.filter(val => val instanceof Hole);
+
+        if (holes.length) {
+          return new Hole(...holes.map(hole => hole.params));
         }
 
         if (nodeVals.indexOf(Package) !== -1) {
@@ -258,7 +251,7 @@ export const Link = types
           const inputs = nodeParams.filter(param => param === Input);
           if (inputs.length) {
             const curried = curry(head, nodeParams.length);
-            return _.ary(curried(...nodeParams), inputs.length);
+            return ary(curried(...nodeParams), inputs.length);
           }
           return head(...nodeParams);
         } else {
@@ -286,7 +279,16 @@ export const Call = types
   .views(self => ({
     get val() {
       const linkVal = self.link.with(self.params);
-      // TODO: handle case of not all params fulfilled
+      // TODO: test this
+      if (linkVal instanceof Hole) {
+        return function(neededParams) {
+          return self.link.with({
+            ...self.params,
+            ...neededParams
+          });
+        };
+      }
+
       return linkVal;
     },
     with() {
