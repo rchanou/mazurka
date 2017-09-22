@@ -27,7 +27,7 @@ class Test extends React.Component {
             3: { id: "3", link: [{ op: "g" }, { val: "console" }] },
             4: {
               id: "4",
-              link: [{ subRef: "0" }, { in: "0" }, { val: null }, { in: "1" }]
+              link: [{ subRef: "0" }, { in: "a" }, { val: null }, { in: "a" }]
             },
             5: {
               id: "5",
@@ -35,7 +35,7 @@ class Test extends React.Component {
             },
             6: { id: "6", link: [{ ref: "4" }, { op: "+" }] },
             7: { id: "7", link: [{ ref: "1" }, { val: 3 }, { val: 2 }] },
-            8: { id: "8", link: [{ ref: "1" }, { in: "2" }, { val: 4 }] },
+            8: { id: "8", link: [{ ref: "1" }, { in: "a" }, { val: 4 }] },
             9: { id: "9", link: [{ ref: "8" }, { val: 3 }] },
             11: { id: "11", link: [{ val: 4 }] },
             12: {
@@ -45,7 +45,7 @@ class Test extends React.Component {
             13: { id: "13", link: [{ op: "+" }, { val: 3 }, { val: 5.4 }] },
             14: {
               id: "14",
-              link: [{ op: "+" }, { in: "5" }, { in: "5" }, { in: "6" }]
+              link: [{ op: "+" }, { in: "n" }, { in: "n" }, { in: "n" }]
             },
             15: {
               id: "15",
@@ -60,19 +60,19 @@ class Test extends React.Component {
               id: "18",
               link: [{ op: "." }, { ref: "17" }, { val: "map" }]
             },
-            19: { id: "19", link: [{ op: "+" }, { in: "11" }, { val: 5.4 }] },
+            19: { id: "19", link: [{ op: "+" }, { in: "a" }, { val: 5.4 }] },
             20: {
               id: "20",
               link: [{ ref: "18" }, { ref: "5" }, { ref: "19" }]
             },
-            21: { id: "21", link: [{ ref: "1" }, { in: "12" }, { val: 2 }] },
+            21: { id: "21", link: [{ ref: "1" }, { in: "a" }, { val: 2 }] },
             22: {
               id: "22",
               link: [{ op: "." }, { ref: "17" }, { val: "spread" }]
             },
             23: { id: "23", link: [{ ref: "22" }, { op: "+" }] },
-            24: { id: "24", link: [{ op: "+" }, { in: "1" }, { val: 1 }] },
-            25: { id: "25", link: [{ op: "+" }, { in: "1" }, { val: -1 }] },
+            24: { id: "24", link: [{ op: "+" }, { in: "a" }, { val: 1 }] },
+            25: { id: "25", link: [{ op: "+" }, { in: "a" }, { val: -1 }] },
             26: { id: "26", link: [{ op: "." }, { in: "a" }, { val: "type" }] },
             27: {
               id: "27",
@@ -86,7 +86,7 @@ class Test extends React.Component {
               ]
             },
             28: { id: "28", link: [{ ref: "27" }, { in: "a" }] },
-            29: { id: "29", link: [{ op: "==" }, { in: "b" }, { val: null }] },
+            29: { id: "29", link: [{ op: "==" }, { in: "a" }, { val: null }] },
             30: {
               id: "30",
               link: [{ op: "?" }, { ref: "29" }, { val: 0 }, { ref: "28" }]
@@ -117,19 +117,6 @@ class Test extends React.Component {
       },
       { system: SystemJS }
     );
-
-    // const flows = {
-    //   0: {
-    //     id: "0",
-    //     flow: {
-    //       0: [{ op: "." }, { param: 1 }, { val: "type" }],
-    //       1: [{ op: "s" }, { subRef: 0 }, { val: "INCREMENT" }, { ref: "24" }, { val: "DECREMENT" }, { ref: "25" }],
-    //       2: [{ subRef: 1 }, { param: 0 }],
-    //       3: [{ op: "==" }, { param: 0 }, { val: null }],
-    //       4: [{ op: "if" }, { subRef: 3 }, { val: 0 }, { subRef: 2 }]
-    //     }
-    //   }
-    // };
 
     const { graph } = graphView;
 

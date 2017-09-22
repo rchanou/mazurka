@@ -170,9 +170,16 @@ export const PackageRef = types
     }
   }));
 
+// TYPE-CEPTION
+export const stringType = "s";
+export const numType = "n";
+export const boolType = "b";
+export const anyType = "a";
+export const ParamType = types.enumeration("ParamType", [stringType, numType, boolType, anyType]);
+
 export const Input = types
   .model("Input", {
-    in: types.string
+    in: ParamType
   })
   .views(self => ({
     get val() {
@@ -187,12 +194,17 @@ curry.placeholder = Input;
 
 export const Param = types
   .model("Param", {
-    param: types.identifier(types.string)
+    param: types.identifier(types.string),
+    type: types.maybe(ParamType, anyType)
   })
   .views(self => ({
     with(params) {
-      // debugger;
-      return params.get(self.param).val;
+      const { param } = self;
+      if (params.has(param)) {
+        return params.get(param).val;
+      } else {
+        return Param;
+      }
     }
   }));
 
@@ -233,6 +245,9 @@ export const Link = types
         // }
 
         const nodeVals = self.link.map(node => node.with(params));
+
+        if (nodeVals.indexOf(Param) !== -1) {
+        }
 
         if (nodeVals.indexOf(Package) !== -1) {
           return Package;
