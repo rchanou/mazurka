@@ -25,6 +25,8 @@ class Test extends React.Component {
             1: { id: "1", link: [{ op: "." }, { ref: "0" }, { val: "pow" }] },
             2: { id: "2", link: [{ op: "." }, { ref: "0" }, { val: "sqrt" }] },
             3: { id: "3", link: [{ op: "g" }, { val: "console" }] },
+            "3b": { id: "3b", link: [{ op: "." }, { ref: "3" }, { val: "log" }] },
+            "3a": { id: "3a", link: [{ ref: "3b" }, { val: "hello world" }] },
             4: {
               id: "4",
               link: [{ subRef: "0" }, { in: "a" }, { val: null }, { in: "a" }]
@@ -124,17 +126,16 @@ class Test extends React.Component {
     const b = getVal(5);
     const c = getVal(19);
     const d = getVal(23);
-
     const subLink = graph.subs.get(0).sub.get(0)[0].ref.link;
     // console.log(subLink, 'le link')
     graphView.graph.expandSub("0", "24", { ref: "5" });
-    const e = getVal("24-2");
-    console.log(e);
-    console.log(getVal("32"));
+    // const e = getVal("24-2");
+    // console.log(e);
+    // console.log(getVal("32"));
     const f = graph.calls.get(0).val;
-    console.log("fff", f);
+    // console.log("fff", f);
     const g = graph.calls.get(1).val;
-    console.log("say what", g, g({ a: 37 }));
+    console.log("say what", g, g(37));
     // const snap = getSnapshot(graph.links);
     // console.log(JSON.stringify(snap));
     // console.log("le test", testPkg);

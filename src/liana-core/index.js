@@ -200,7 +200,6 @@ class Hole {
         this.params[param] = true;
       }
     }
-    // this.params = params;
   }
 }
 
@@ -286,8 +285,10 @@ export const Call = types
       const linkVal = self.link.with(self.params);
       if (linkVal instanceof Hole) {
         const paramEntries = self.params.entries().slice();
-        return newParams => {
-          const newParamEntries = Object.entries(newParams);
+        const holeParamIds = Object.keys(linkVal.params);
+
+        return (...newParams) => {
+          const newParamEntries = newParams.map((param, i) => [holeParamIds[i], param]);
           const allParamEntries = [...paramEntries, ...newParamEntries];
           const allParams = new Map(allParamEntries);
           return self.link.with(allParams);
